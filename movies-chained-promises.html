@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript">
+	var apiUrl = 'https://api.themoviedb.org/3/search/movie?api_key=fec8b5ab27b292a68294261bb21b04a5&query=';
+
+	var movieApiUrl='https://api.themoviedb.org/3/movie/';
+
+	function getMovieResults(movieString){
+		//we need a promise because we have an async operation(AJAX)
+		return new Promise((resolve, reject)=>{
+			$.getJSON(apiUrl + movieString,(theData)=>{
+				resolve(theData);
+			})
+		})
+	}
+
+	function getCast(movie){
+		var movieId = movie.id;
+		return new Promise((resolve,reject)=>{
+			$.getJSON(movieApiUrl + movieId + 'api_key=fec8b5ab27b292a68294261bb21b04a5',(
+				thisMovieData)=>{
+				console.log(thisMovieData)
+				resolve(thisMovieData);
+			})
+		})
+
+	}
+
+
+//store our promise in a var
+	var promise1 = getMovieResults('Interstellar');
+	//after the promise has run resolve THEN, run the next anon function. We get a param in the anon function, whatever resolve sent.
+	promise1.then((movieJSON)=>{ //when .then happens we know resolve has happened.
+		//console.log(movieJSON);
+		//return another promise(the result of getCast)
+		return getCast(movieJSON.results[0]);
+	}).then((movieResult)=>{
+		console.log(castResult)
+	})
+	console.log(promise1);
+
+
+	</script>
+</head>
+</html>
